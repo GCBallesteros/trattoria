@@ -11,12 +11,32 @@ import trattoria_core
 
 @dataclass
 class G2Result:
+    """Results from running the G2 algorithm
+
+    Attributes
+    ----------
+    t
+        The time values for the g2 histogram.
+    g2
+        The g2 histogram.
+    """
     t: np.array
     g2: np.array
 
 
 @dataclass
 class TimeTraceResult:
+    """Results from the time trace algorithm.
+
+    Attributes
+    ----------
+    t
+        The time values at which the intensity is sampled.
+    tt
+        The intensity time trace.
+    recnum
+        The last record number on each of the bins of the intensity trace.
+    """
     t: np.array
     tt: np.array
     recnum: np.array
@@ -24,6 +44,26 @@ class TimeTraceResult:
 
 @dataclass
 class ZeroFinderResult:
+    """Results from the zero finder algorithm
+
+    Attributes
+    ----------
+    raw_hist
+        The pseudo-g2 histogram we use to derive the zero point of the histogram.
+    fit_y
+        The values of the fitted function used to find the zero point.
+    t
+        The time values corresponding to `raw_hist` and `fit_y`
+    t0
+        The zero point of the histogram which corresponds to the delay between
+        the lines connecting to the channels of the TCSPC.
+    tau1
+        The tau1 parameter for the fit.
+    tau2
+        The tau2 parameter for the fit.
+    max_intensity
+        The max_intensity parameter for the fit.
+    """
     raw_hist: np.array
     fit_y: np.array
     t: np.array
