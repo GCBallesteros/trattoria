@@ -75,6 +75,21 @@ class ZeroFinderResult:
 
 @dataclass
 class ZeroFinderParameters:
+    """Parameters for the zero finder algorithm.
+
+    Attributes
+    ----------
+    channel_1
+        The first channel of the TCSPC
+    channel_2
+        The second channel of the TCSPC
+    correlation_window
+        Correlation window length used for the fitting procedure. If not provided
+        it will default to a value appropriate to the number of counts available.
+    resolution
+        Resolution used for the pseudo-g2 histogram. If `None` a suitable default
+        is selected automatically.
+    """
     channel_1: int
     channel_2: int
     correlation_window: Optional[float] = None
@@ -83,6 +98,34 @@ class ZeroFinderParameters:
 
 class TTTRFile:
     def g2(self, params: trattoria_core.G2Parameters):
+        """Compute the second order autocorrelation between two channels in the file.
+
+        Arguments
+        ---------
+        params: G2Parameters
+            A G2Parameters object has the following fields:
+                - channel_1 (int): First channel used on TCSPC
+                - channel_2 (int): Second channel used on TCSPC
+                - correlation_window (float): Length in seconds of the g2 window we
+                want to consider. Values in the output histogram will be in the
+                ±correlation_window range being centered at the zero delay.
+                - resolution (float): Length in seconds of each bin in the g2 histogram.
+                - start_record (int or None): Optionally the first record we want
+                to consider when running the g2.
+                - stop_record (int or None): Optionally the last record we want to
+                consider when running the g2.
+
+        Assumptions
+        -----------
+        1. At least two channels are being used in the TCSPC.
+        2. The two channels in used are correctly identified by their integer.
+        3. Failure two have similar number of counts on both channels can lead to
+           assymetries.
+
+        Returns
+        -------
+        G2Result
+        """
         filepath = str(self.path)
         t, hist = trattoria_core.g2(
             filepath,
@@ -92,6 +135,25 @@ class TTTRFile:
         return G2Result(t=t, g2=hist)
 
     def timetrace(self, params: trattoria_core.TimeTraceParameters):
+        """Compute a time trace of the intensity as a function of time.
+
+        The output TimeTraceResult object also contains the last record number of each
+        click in a given time bin.
+
+        Arguments
+        ---------
+        params: TimeTraceParameters
+            A TimeTraceParameters object has the following fields:
+                - resolution (float): The length of each bin of the intensity trace.
+                Smaller resolutions give us a finer understanding of the intensity
+                dynamics at the expense of lower counts and therefore bigger uncertainty.
+                - channel (int or None): If None the intensity trace is integrated
+                across channels. If provided will only include photons in said channel.
+
+        Returns
+        -------
+        TimeTraceResult
+        """
         filepath = str(self.path)
         timetrace, recnum_trace = trattoria_core.timetrace(
             filepath,
@@ -178,8 +240,8 @@ def double_decay(t, tau1, tau2, t0, max_value):
     ```
     f(t) = \\begin{cases} 
              t<t_0 & A\exp(\\frac{-|t-t_0|}{\\tau_l}) \\\\
-             t \geq t_0 & A\exp(\\frac{-|t-t_0|}{\\tau_r}) \\\\
-           \end{cases}
+             t \\geq t_0 & A\\exp(\\frac{-|t-t_0|}{\\tau_r}) \\\\
+           \\end{cases}
     ```
 
     Parameters
