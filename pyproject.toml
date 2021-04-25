@@ -1,9 +1,12 @@
 [tool.poetry]
 name = "trattoria"
-version = "0.1.0"
+version = "0.1.1"
 description = "The fastest streaming algorithms for your TTTR data"
 authors = ["Guillem Ballesteros <dev+pypi@maxwellrules.com>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/GCBallesteros/trattoria"
+repository = "https://github.com/GCBallesteros/trattoria"
 
 [tool.poetry.dependencies]
 python = ">=3.6"
