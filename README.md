@@ -1,10 +1,10 @@
 # 🍕 Trattoria 🍕
 Trattoria delivers you the fastest streaming algorithms to analyze your TTTR data. We
 currenlty support the following algorithms:
-- Second order autocorrelations: Calculate the autocorrelation between two channels of
+- __Second order autocorrelations__: Calculate the autocorrelation between two channels of
   your TCSPC.
-- Intensity time trace: Calculate the intensity on each (or all) channels versus time.
-- Zero finder: Given two uncorrelated channels (e.g. a laser behind a 50/50 splitter)
+- __Intensity time trace__: Calculate the intensity on each (or all) channels versus time.
+- __Zero finder__: Given two uncorrelated channels (e.g. a laser behind a 50/50 splitter)
   compute the delay between the input channels.
 
 ## Supported file formats
@@ -45,7 +45,7 @@ For more details check the docstrings in `core.py`.
 
 ## Design
 Trattoria is just a very thin wrapper around the
-[trattoria-core](https://github.com/GCBallesteros/trattoria-core) library which
+[trattoria-core](https://github.com/GCBallesteros(/trattoria-core) library which
 itselfs provides a lower level interface to the the
 [tttr-toolbox](https://github.com/GCBallesteros/tttr-toolbox/tree/master/tttr-toolbox)
 library. A Rust project that provides the compiled components that allows us to
