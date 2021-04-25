@@ -20,6 +20,7 @@ class G2Result:
     g2
         The g2 histogram.
     """
+
     t: np.array
     g2: np.array
 
@@ -37,6 +38,7 @@ class TimeTraceResult:
     recnum
         The last record number on each of the bins of the intensity trace.
     """
+
     t: np.array
     tt: np.array
     recnum: np.array
@@ -64,6 +66,7 @@ class ZeroFinderResult:
     max_intensity
         The max_intensity parameter for the fit.
     """
+
     raw_hist: np.array
     fit_y: np.array
     t: np.array
@@ -90,6 +93,7 @@ class ZeroFinderParameters:
         Resolution used for the pseudo-g2 histogram. If `None` a suitable default
         is selected automatically.
     """
+
     channel_1: int
     channel_2: int
     correlation_window: Optional[float] = None

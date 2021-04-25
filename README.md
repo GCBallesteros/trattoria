@@ -1,5 +1,4 @@
-# Trattoria
-🍕
+# 🍕 Trattoria 🍕
 Trattoria delivers you the fastest streaming algorithms to analyze your TTTR data. We
 currenlty support the following algorithms:
 - Second order autocorrelations: Calculate the autocorrelation between two channels of
@@ -45,8 +44,9 @@ The examples folders contains examples of all the functionality available in Tra
 For more details check the docstrings in `core.py`.
 
 ## Design
-Trattoria is just a very thing wrapper around the trattoria-core library which itselfs provides
+Trattoria is just a very thin wrapper around the trattoria-core library which itselfs provides
 a lower level interface to the the tttr-toolbox library. A Rust project that provides
 the compiled components that allows us to go fast.
 
 ## Citing
+

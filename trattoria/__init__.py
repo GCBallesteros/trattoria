@@ -6,4 +6,4 @@ from .core import (
     PTUFile,
 )
 
-from trattoria_core import G2Parameters, TimeTraceParameters 
+from trattoria_core import G2Parameters, TimeTraceParameters
