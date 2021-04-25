@@ -17,9 +17,9 @@ pip install trattoria
 ```
 
 ## Examples
-The entry point to Trattoria is the PTUFile class. This class has three methods that
-give us access to the algorithms. Each of the algorithms takes as input a parameter
-object and returns a results object. For example:
+The entry point to Trattoria is the PTUFile class. This class has three methods
+that give us access to the algorithms. Each of the algorithms takes as input a
+parameter object and returns a results object. For example:
 ```python
 import trattoria
 
@@ -44,9 +44,12 @@ The examples folders contains examples of all the functionality available in Tra
 For more details check the docstrings in `core.py`.
 
 ## Design
-Trattoria is just a very thin wrapper around the trattoria-core library which itselfs provides
-a lower level interface to the the tttr-toolbox library. A Rust project that provides
-the compiled components that allows us to go fast.
+Trattoria is just a very thin wrapper around the
+[trattoria-core](https://github.com/GCBallesteros/trattoria-core) library which
+itselfs provides a lower level interface to the the
+[tttr-toolbox](https://github.com/GCBallesteros/tttr-toolbox/tree/master/tttr-toolbox)
+library. A Rust project that provides the compiled components that allows us to
+go fast.
 
 ## Citing
 
