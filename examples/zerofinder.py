@@ -20,7 +20,7 @@ zf_res = ptu.zerofinder(zerofinder_params)
 end_time = perf_counter()
 time_delta = end_time - start_time
 
-print(f"G2 execution time: {time_delta:.3f} s")
+print(f"Zerofinder execution time: {time_delta:.3f} s")
 print(f"  Processed {file_size/time_delta:.2f} GB/s")
 
 plt.plot(zf_res.t * 1e9, zf_res.raw_hist)
