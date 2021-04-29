@@ -10,8 +10,8 @@ repository = "https://github.com/GCBallesteros/trattoria"
 
 [tool.poetry.dependencies]
 python = ">=3.6"
-numpy = "1.19.5"
-scipy = "1.5.4"
+numpy = ">=1.16"
+scipy = ">=1.5"
 trattoria-core = "0.1.0"
 
 [tool.poetry.dev-dependencies]
