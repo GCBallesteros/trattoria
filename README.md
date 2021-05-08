@@ -45,7 +45,7 @@ For more details check the docstrings in `core.py`.
 
 ## Design
 Trattoria is just a very thin wrapper around the
-[trattoria-core](https://github.com/GCBallesteros(/trattoria-core) library which
+[trattoria-core](https://github.com/GCBallesteros/trattoria-core) library which
 itselfs provides a lower level interface to the the
 [tttr-toolbox](https://github.com/GCBallesteros/tttr-toolbox/tree/master/tttr-toolbox)
 library. A Rust project that provides the compiled components that allows us to
