@@ -3,7 +3,8 @@ from .core import (
     G2Result,
     TimeTraceResult,
     ZeroFinderResult,
+    LifetimeResult,
     PTUFile,
 )
 
-from trattoria_core import G2Parameters, TimeTraceParameters
+from trattoria_core import G2Parameters, TimeTraceParameters, LifetimeParameters
