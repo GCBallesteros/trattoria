@@ -100,6 +100,22 @@ class ZeroFinderParameters:
     resolution: Optional[float] = None
 
 
+@dataclass
+class LifetimeResult:
+    """Results from running the lifetime algorithm
+
+    Attributes
+    ----------
+    t
+        The time values for the lifetime histogram.
+    g2
+        The lifetime histogram.
+    """
+
+    t: np.array
+    g2: np.array
+
+
 class TTTRFile:
     def g2(self, params: trattoria_core.G2Parameters):
         """Compute the second order autocorrelation between two channels in the file.
@@ -209,6 +225,44 @@ class TTTRFile:
             t0=x_opt[2],
             max_intensity=x_opt[3],
         )
+
+    def lifetime(self, params: trattoria_core.LifetimeParameters):
+        """Compute the lifetime histogram from a pulsed excitation experiment.
+
+        Arguments
+        ---------
+        params: LifetimeParameters
+            A G2Parameters object has the following fields:
+                - channel_sync (int): Sync channel on the TCSPC
+                - channel_source (int): Channel used for the source
+                - resolution (float): Length in seconds of each bin in the lifetime histogram.
+                - start_record (int or None): Optionally the first record we want
+                to consider when running the lifetime.
+                - stop_record (int or None): Optionally the last record we want to
+                consider when running the lifetime.
+
+        Notes
+        -----
+        The lifetime algorithm is only supported for PTU files in T3 mode because we
+        expect to have the sync rate available on the file header.
+
+        Assumptions
+        -----------
+        1. We are dealing with a pulsed excitation experiment.
+        2. If the sync delay line is shorter than the source line the lifetime histogram
+        will appeared cut on the left.
+
+        Returns
+        -------
+        LifetimeResult
+        """
+        filepath = str(self.path)
+        t, hist = trattoria_core.lifetime(
+            filepath,
+            params,
+        )
+
+        return LifetimeResult(t=t, g2=hist)
 
 
 class PTUFile(TTTRFile):

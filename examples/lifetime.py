@@ -6,27 +6,26 @@ import matplotlib.pyplot as plt
 
 import trattoria
 
-ptu_filepath = Path("/Users/garfield/Downloads/20191205_Xminus_0p1Ve-6_CW_HBT.ptu")
+ptu_filepath = Path("/Users/garfield/Downloads/GUI_T3_10s.ptu")
 ptu = trattoria.PTUFile(ptu_filepath)
 file_size = os.path.getsize(ptu_filepath) / (1024.0 ** 3)
 print(ptu)
 
-# Test G2
+# Test Lifetime
 start_time = perf_counter()
-g2_params = trattoria.G2Parameters(
-    channel_1=0,
-    channel_2=2,
-    correlation_window=500e-12,
+lifetime_params = trattoria.LifetimeParameters(
+    channel_sync=0,
+    channel_source=2,
     resolution=60e-12,
     start_record=None,
     stop_record=None,
 )
-g2_res = ptu.g2(g2_params)
+lifetime_res = ptu.lifetime(lifetime_params)
 end_time = perf_counter()
 time_delta = end_time - start_time
-print(f"G2 execution time: {time_delta:.3f} s")
+print(f"Lifetime execution time: {time_delta:.3f} s")
 print(f"  Processed {file_size/time_delta:.2f} GB/s")
 
-plt.plot(g2_res.t * 1e9, g2_res.g2)
+plt.plot(lifetime_res.t * 1e9, lifetime_res.g2)
 plt.xlabel("Delay (ns)")
 plt.show()

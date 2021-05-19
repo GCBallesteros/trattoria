@@ -6,6 +6,7 @@ currenlty support the following algorithms:
 - __Intensity time trace__: Calculate the intensity on each (or all) channels versus time.
 - __Zero finder__: Given two uncorrelated channels (e.g. a laser behind a 50/50 splitter)
   compute the delay between the input channels.
+- __Lifetime__: Compute the lifetime histogram from a pulsed excitation experiment.
 
 ## Supported file formats
 Currently Trattoria can only read PTU files from PicoQuant. If you want support for more
