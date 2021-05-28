@@ -15,7 +15,7 @@ print(ptu)
 start_time = perf_counter()
 timetrace_params = trattoria.TimeTraceParameters(
     resolution=1.0,
-    channel=63,
+    channel=4,
 )
 tt_res = ptu.timetrace(timetrace_params)
 end_time = perf_counter()

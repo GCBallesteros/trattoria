@@ -6,7 +6,9 @@ import matplotlib.pyplot as plt
 
 import trattoria
 
-ptu_filepath = Path("/Users/garfield/Downloads/20191205_Xminus_0p1Ve-6_CW_HBT.ptu")
+# ptu_filepath = Path("/Users/garfield/Downloads/20191205_Xminus_0p1Ve-6_CW_HBT.ptu")
+ptu_filepath = Path("/Users/garfield/Downloads/GUI_T3_10s.ptu")
+# ptu_filepath = Path("/Users/garfield/Downloads/GUI_T2.ptu")
 ptu = trattoria.PTUFile(ptu_filepath)
 file_size = os.path.getsize(ptu_filepath) / (1024.0 ** 3)
 print(ptu)
@@ -14,9 +16,9 @@ print(ptu)
 # Test G2
 start_time = perf_counter()
 g2_params = trattoria.G2Parameters(
-    channel_1=0,
+    channel_1=1,
     channel_2=2,
-    correlation_window=500e-12,
+    correlation_window=10000e-12,
     resolution=60e-12,
     start_record=None,
     stop_record=None,

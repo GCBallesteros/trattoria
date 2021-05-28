@@ -16,7 +16,7 @@ start_time = perf_counter()
 lifetime_params = trattoria.LifetimeParameters(
     channel_sync=0,
     channel_source=2,
-    resolution=60e-12,
+    resolution=160e-12,
     start_record=None,
     stop_record=None,
 )
