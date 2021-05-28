@@ -8,6 +8,36 @@ from scipy.optimize import curve_fit
 
 import trattoria_core
 
+@dataclass
+class G3SyncResult:
+    """Results from running the synced G3 algorithm
+
+    Attributes
+    ----------
+    t
+        The time values for the g3 histogram.
+    g3
+        The g3 histogram.
+    """
+
+    t: np.array
+    g3: np.array
+
+@dataclass
+class G3Result:
+    """Results from running the G3 algorithm
+
+    Attributes
+    ----------
+    t
+        The time values for the g3 histogram.
+    g3
+        The g3 histogram.
+    """
+
+    t: np.array
+    g3: np.array
+
 
 @dataclass
 class G2Result:
@@ -117,6 +147,81 @@ class LifetimeResult:
 
 
 class TTTRFile:
+    def g3(self, params: trattoria_core.G3Parameters):
+        """Compute the third order autocorrelation between two channels in the file.
+
+        Arguments
+        ---------
+        params: G3Parameters
+            A G3Parameters object has the following fields:
+                - channel_1 (int): First channel used on TCSPC
+                - channel_2 (int): Second channel used on TCSPC
+                - channel_3 (int): Third channel used on TCSPC
+                - correlation_window (float): Length in seconds of the g3 square window we
+                want to consider. Values in the output histogram will be in the
+                ±correlation_window range being centered at the zero delay.
+                - resolution (float): Length in seconds of each bin in the g3 histogram.
+                - start_record (int or None): Optionally the first record we want
+                to consider when running the g3.
+                - stop_record (int or None): Optionally the last record we want to
+                consider when running the g3.
+
+        Assumptions
+        -----------
+        1. At least three channel are being used in the TCSPC.
+        2. The three channels in used are correctly identified by their integer.
+        3. Failure to have similar number of counts on both channels can lead to
+           asymmetries.
+
+        Returns
+        -------
+        G3Result
+        """
+        filepath = str(self.path)
+        t, hist = trattoria_core.g3(
+            filepath,
+            params,
+        )
+        hist = hist.reshape((len(t), len(t)))
+
+        return G3Result(t=t, g3=hist)
+
+    def g3sync(self, params: trattoria_core.G3SyncParameters):
+        """Compute the third order autocorrelation between two channels in the file.
+
+        Arguments
+        ---------
+        params: G3SyncParameters
+            A G3SyncParameters object has the following fields:
+                - channel_sync (int): Sync channel on the the TCSPC
+                - channel_1 (int): First source channel used on TCSPC
+                - channel_2 (int): Second source channel used on TCSPC
+                - resolution (float): Length in seconds of each bin in the g3 histogram.
+                - start_record (int or None): Optionally the first record we want
+                to consider when running the g3.
+                - stop_record (int or None): Optionally the last record we want to
+                consider when running the g3.
+
+        Assumptions
+        -----------
+        1. At least three channel are being used in the TCSPC. One of them being
+        a sync channel.
+        2. The three channels in used are correctly identified by their integer.
+        3. You are dealing with a pulsed excitation experiment
+
+        Returns
+        -------
+        G3SyncResult
+        """
+        filepath = str(self.path)
+        t, hist = trattoria_core.g3sync(
+            filepath,
+            params,
+        )
+        hist = hist.reshape((len(t), len(t)))
+
+        return G3SyncResult(t=t, g3=hist)
+
     def g2(self, params: trattoria_core.G2Parameters):
         """Compute the second order autocorrelation between two channels in the file.
 
@@ -232,7 +337,7 @@ class TTTRFile:
         Arguments
         ---------
         params: LifetimeParameters
-            A G2Parameters object has the following fields:
+            A LifetimeParameters object has the following fields:
                 - channel_sync (int): Sync channel on the TCSPC
                 - channel_source (int): Channel used for the source
                 - resolution (float): Length in seconds of each bin in the lifetime histogram.
