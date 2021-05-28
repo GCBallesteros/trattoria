@@ -3,6 +3,8 @@ Trattoria delivers you the fastest streaming algorithms to analyze your TTTR dat
 currenlty support the following algorithms:
 - __Second order autocorrelations__: Calculate the autocorrelation between two channels of
   your TCSPC.
+- __Third Order autocorrelations__: Calculate the coincidences between 3 channels. A sync
+version is provided were it uses the fact that the sync channel is periodic and known.
 - __Intensity time trace__: Calculate the intensity on each (or all) channels versus time.
 - __Zero finder__: Given two uncorrelated channels (e.g. a laser behind a 50/50 splitter)
   compute the delay between the input channels.
@@ -18,9 +20,11 @@ pip install trattoria
 ```
 
 ## Examples
-The entry point to Trattoria is the PTUFile class. This class has three methods
+The entry point to Trattoria is the PTUFile class. This class has methods
 that give us access to the algorithms. Each of the algorithms takes as input a
-parameter object and returns a results object. For example:
+parameter object and returns a results object. For a complete list of the functionality
+see the `examples` folder.
+
 ```python
 import trattoria
 
