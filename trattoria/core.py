@@ -8,20 +8,25 @@ from scipy.optimize import curve_fit
 
 import trattoria_core
 
+
 @dataclass
 class G3SyncResult:
     """Results from running the synced G3 algorithm
 
     Attributes
     ----------
-    t
-        The time values for the g3 histogram.
+    tau1
+        The tau1 values for the g3 histogram.
+    tau2
+        The tau2 values for the g3 histogram.
     g3
         The g3 histogram.
     """
 
-    t: np.array
+    tau1: np.array
+    tau2: np.array
     g3: np.array
+
 
 @dataclass
 class G3Result:
@@ -29,13 +34,16 @@ class G3Result:
 
     Attributes
     ----------
-    t
-        The time values for the g3 histogram.
+    tau1
+        The tau1 values for the g3 histogram.
+    tau2
+        The tau2 values for the g3 histogram.
     g3
         The g3 histogram.
     """
 
-    t: np.array
+    tau1: np.array
+    tau2: np.array
     g3: np.array
 
 
@@ -184,7 +192,12 @@ class TTTRFile:
         )
         hist = hist.reshape((len(t), len(t)))
 
-        return G3Result(t=t, g3=hist)
+        # The histogram is flipped because on the original array delays grow from
+        # top to bottom and left to right but plots are usually represented with
+        # axis growing towards the top-right corner.
+        # We also transpose because the first index (rows) corresponds to tau1 but
+        # usual representation practices put it onto the horizontal axis.
+        return G3Sync(tau1=np.copy(t), tau2=np.copy(t), g3=np.flipud(hist).T)
 
     def g3sync(self, params: trattoria_core.G3SyncParameters):
         """Compute the third order autocorrelation between two channels in the file.
@@ -220,7 +233,12 @@ class TTTRFile:
         )
         hist = hist.reshape((len(t), len(t)))
 
-        return G3SyncResult(t=t, g3=hist)
+        # The histogram is flipped because on the original array delays grow from
+        # top to bottom and left to right but plots are usually represented with
+        # axis growing towards the top-right corner.
+        # We also transpose because the first index (rows) corresponds to tau1 but
+        # usual representation practices put it onto the horizontal axis.
+        return G3SyncResult(tau1=np.copy(t), tau2=np.copy(t), g3=np.flipud(hist).T)
 
     def g2(self, params: trattoria_core.G2Parameters):
         """Compute the second order autocorrelation between two channels in the file.
