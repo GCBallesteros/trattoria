@@ -197,7 +197,7 @@ class TTTRFile:
         # axis growing towards the top-right corner.
         # We also transpose because the first index (rows) corresponds to tau1 but
         # usual representation practices put it onto the horizontal axis.
-        return G3Sync(tau1=np.copy(t), tau2=np.copy(t), g3=np.flipud(hist).T)
+        return G3Result(tau1=np.copy(t), tau2=np.copy(t), g3=np.flipud(hist).T)
 
     def g3sync(self, params: trattoria_core.G3SyncParameters):
         """Compute the third order autocorrelation between two channels in the file.
