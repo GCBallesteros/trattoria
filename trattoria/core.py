@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple, Union
+
 
 import numpy as np
 
@@ -112,6 +113,17 @@ class ZeroFinderResult:
     tau1: float
     tau2: float
     max_intensity: float
+
+
+@dataclass
+class G2Parameters:
+    """Parameters for the g2 algorithm."""
+
+    channel_1: int
+    channel_2: int
+    correlation_window: float
+    resolution: float
+    record_ranges: Optional[Union[Tuple[int, int], List[Tuple[int, int]]]]
 
 
 @dataclass
@@ -240,7 +252,7 @@ class TTTRFile:
         # usual representation practices put it onto the horizontal axis.
         return G3SyncResult(tau1=np.copy(t), tau2=np.copy(t), g3=np.flipud(hist).T)
 
-    def g2(self, params: trattoria_core.G2Parameters):
+    def g2(self, params: G2Parameters):
         """Compute the second order autocorrelation between two channels in the file.
 
         Arguments
@@ -253,11 +265,8 @@ class TTTRFile:
                 want to consider. Values in the output histogram will be in the
                 ±correlation_window range being centered at the zero delay.
                 - resolution (float): Length in seconds of each bin in the g2 histogram.
-                - start_record (int or None): Optionally the first record we want
-                to consider when running the g2.
-                - stop_record (int or None): Optionally the last record we want to
-                consider when running the g2.
-
+                - record_range (List[Tuple[int, int]]): List of record ranges that
+                should be considered in the analysis.
         Assumptions
         -----------
         1. At least two channels are being used in the TCSPC.
@@ -270,9 +279,29 @@ class TTTRFile:
         G2Result
         """
         filepath = str(self.path)
+
+        # Build the trattoria_core.G2Parameters
+        if params.record_ranges is not None:
+            # If just have a pair of numbers instead of a list we need to wrap
+            # it around a list since that is what trattoria_core expects.
+            if isinstance(params.record_ranges, tuple):
+                ranges = [params.record_ranges]
+            else:
+                ranges = params.record_ranges
+        else:
+            ranges = params.record_ranges
+
+        params_core = trattoria_core.G2Parameters(
+            channel_1=params.channel_1,
+            channel_2=params.channel_2,
+            correlation_window=params.correlation_window,
+            resolution=params.resolution,
+            record_ranges=ranges,
+        )
+
         t, hist = trattoria_core.g2(
             filepath,
-            params,
+            params_core,
         )
 
         return G2Result(t=t, g2=hist)
@@ -405,7 +434,7 @@ class PTUFile(TTTRFile):
         """Pretty print the metadata dictionary to the screen."""
         fields: List[str] = []
         for field_name in self.header:
-            value, ftype = self.header[field_name]
+            value, _ = self.header[field_name]
             fields.append(f"{field_name:<35} {value}")
 
         nl = "\n"
@@ -419,7 +448,7 @@ def double_decay(t, tau1, tau2, t0, max_value):
     """Asymmetricly decaying exponential.
 
     ```
-    f(t) = \\begin{cases} 
+    f(t) = \\begin{cases}
              t<t_0 & A\exp(\\frac{-|t-t_0|}{\\tau_l}) \\\\
              t \\geq t_0 & A\\exp(\\frac{-|t-t_0|}{\\tau_r}) \\\\
            \\end{cases}
