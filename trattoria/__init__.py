@@ -15,3 +15,5 @@ from trattoria_core import (
     G3Parameters,
     G3SyncParameters,
 )
+
+from .postselection import construct_postselect_vector
