@@ -1,12 +1,15 @@
 from typing import List, Tuple
 
+import numpy as np
+
 import trattoria
+
 
 def construct_postselect_vector(
     timetrace_result: trattoria.TimeTraceResult,
     threshold: float,
     above: bool = True,
-) -> Tuple[List[Tuple[int, int]], List[Tuple[int, int]]]:
+) -> List[Tuple[int, int]]:
     """Constructs a postselection vector based on thresholding the intensity trace.
 
     Ranges of records were the intensity is above/below some threshold will be excluded.
@@ -30,20 +33,25 @@ def construct_postselect_vector(
     recnum = timetrace_result.recnum
 
     if above:
-        select = intensity > threshold
-        if timetrace_y[0] > threshold:
+        if intensity[0] > threshold:
             add_first_time = True
         else:
             add_first_time = False
     else:
-        select = intensity < threshold
-        if timetrace_y[0] < threshold:
+        if intensity[0] < threshold:
             add_first_time = True
         else:
             add_first_time = False
 
     # Find the transitions between on and off states by looking at the derivative.
-    select_ranges = np.diff(intensity > threshold, prepend=intensity[0]).nonzero()[0]
+    if above:
+        select_ranges = np.diff(intensity > threshold, prepend=intensity[0]).nonzero()[
+            0
+        ]
+    else:
+        select_ranges = np.diff(intensity < threshold, prepend=intensity[0]).nonzero()[
+            0
+        ]
 
     if add_first_time:
         select_ranges = np.insert(select_ranges, 0, 0).astype(int)
@@ -57,23 +65,28 @@ def construct_postselect_vector(
 
     # The select ranges are inclusive of the first index and exclusive of the second
     # one. Since the recnum include the last record on the bin when selecting the start
-    # we must look at the previous bin. On the second index because select_ranges is
-    # exlusive we also have to subtract one. In both cases we need to subtract one.
+    # we must look at the previous recnum. On the second index because select_ranges is
+    # exlusive we need to subtract one because we want the previous recnum.
+    # In both cases we need to subtract one.
     select_ranges -= 1
 
     if select_ranges[0, 0] == -1:
+        # The -1 index is conceptually the start of the measurement. i.e. recnum 0
         start_on_zero_record = True
-        # Fix the indexing problem and fix a posterior
         select_ranges[0, 0] = 0
     else:
         start_on_zero_record = False
 
     recnum_post_select_ranges = [
-        (recnum[post_selec_range[0]], recnum[post_selec_range[1]])
+        (recnum[post_select_range[0]], recnum[post_select_range[1]])
         for post_select_range in select_ranges
     ]
 
-    if start_on_zero_index:
+    if start_on_zero_record:
         recnum_post_select_ranges[0] = (0, recnum_post_select_ranges[0][1])
 
-    return select_ranges, recnum_post_select_ranges
+    # There is a potential bug in that the last record of bins may be selected when
+    # it is below treshold and it should not. It's not a big deal in the big scheme
+    # of things but something to look out for.
+
+    return recnum_post_select_ranges
