@@ -20,8 +20,7 @@ g2_params = trattoria.G2Parameters(
     channel_2=2,
     correlation_window=10000e-12,
     resolution=60e-12,
-    start_record=None,
-    stop_record=None,
+    record_ranges=None,
 )
 g2_res = ptu.g2(g2_params)
 end_time = perf_counter()
