@@ -56,5 +56,11 @@ itselfs provides a lower level interface to the the
 library. A Rust project that provides the compiled components that allows us to
 go fast.
 
+## Changelog
+### 0.3.3
+- The underlying TTTR Toolbox and Trattoria Core were refactored to support multiple
+custom ranges or records at once. `start_range` and `stop_range` have disappeared in
+favor of `record_ranges`. It takes a list of tuples of integers or `None`.
+
 ## Citing
 
