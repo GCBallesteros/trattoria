@@ -167,7 +167,7 @@ class LifetimeResult:
 
 
 class TTTRFile:
-    def g3(self, params: trattoria_core.G3Parameters):
+    def g3(self, params: trattoria_core.G3Parameters) -> G3Result:
         """Compute the third order autocorrelation between two channels in the file.
 
         Arguments
@@ -211,7 +211,7 @@ class TTTRFile:
         # usual representation practices put it onto the horizontal axis.
         return G3Result(tau1=np.copy(t), tau2=np.copy(t), g3=np.flipud(hist).T)
 
-    def g3sync(self, params: trattoria_core.G3SyncParameters):
+    def g3sync(self, params: trattoria_core.G3SyncParameters) -> G3SyncResult:
         """Compute the third order autocorrelation between two channels in the file.
 
         Arguments
@@ -252,7 +252,7 @@ class TTTRFile:
         # usual representation practices put it onto the horizontal axis.
         return G3SyncResult(tau1=np.copy(t), tau2=np.copy(t), g3=np.flipud(hist).T)
 
-    def g2(self, params: G2Parameters):
+    def g2(self, params: G2Parameters, mode: str = "symmetric") -> G2Result:
         """Compute the second order autocorrelation between two channels in the file.
 
         Arguments
@@ -267,6 +267,14 @@ class TTTRFile:
                 - resolution (float): Length in seconds of each bin in the g2 histogram.
                 - record_range (List[Tuple[int, int]]): List of record ranges that
                 should be considered in the analysis.
+        mode: str
+            Selects the g2 algorithm, one of "symmetric" or "asymmetric". The symmetric
+            mode is more computationally expensive (x2) but gives you access to negative
+            and positive time delays of channel 2 w.r.t. channel 1. In asymmetric mode
+            only positive delays of channel 2 w.r.t to channel 1 are visible. In this
+            case the zero delay position may not be visible in the output histogram, if
+            this is the case switch the channels or use the symmetric mode.
+
         Assumptions
         -----------
         1. At least two channels are being used in the TCSPC.
@@ -291,6 +299,9 @@ class TTTRFile:
         else:
             ranges = params.record_ranges
 
+        if mode not in ["symmetric", "asymmetric"]:
+            raise ValueError("Mode has to be one of symmetric or asymmetric.")
+
         params_core = trattoria_core.G2Parameters(
             channel_1=params.channel_1,
             channel_2=params.channel_2,
@@ -302,11 +313,12 @@ class TTTRFile:
         t, hist = trattoria_core.g2(
             filepath,
             params_core,
+            mode=mode,
         )
 
         return G2Result(t=t, g2=hist)
 
-    def timetrace(self, params: trattoria_core.TimeTraceParameters):
+    def timetrace(self, params: trattoria_core.TimeTraceParameters) -> TimeTraceResult:
         """Compute a time trace of the intensity as a function of time.
 
         The output TimeTraceResult object also contains the last record number of each
@@ -378,7 +390,7 @@ class TTTRFile:
             max_intensity=x_opt[3],
         )
 
-    def lifetime(self, params: trattoria_core.LifetimeParameters):
+    def lifetime(self, params: trattoria_core.LifetimeParameters) -> LifetimeResult:
         """Compute the lifetime histogram from a pulsed excitation experiment.
 
         Arguments

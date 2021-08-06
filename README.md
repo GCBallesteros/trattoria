@@ -11,8 +11,9 @@ version is provided were it uses the fact that the sync channel is periodic and 
 - __Lifetime__: Compute the lifetime histogram from a pulsed excitation experiment.
 
 ## Supported file formats
-Currently Trattoria can only read PTU files from PicoQuant. If you want support for more
-or want to help providing it please put a ticket on the tttr-toolbox project.
+Currently Trattoria can only read PTU files from PicoQuant. If you want support
+for more or want to help providing it please put a ticket on the tttr-toolbox
+project.
 
 ## Installing
 ```
@@ -20,10 +21,10 @@ pip install trattoria
 ```
 
 ## Examples
-The entry point to Trattoria is the PTUFile class. This class has methods
-that give us access to the algorithms. Each of the algorithms takes as input a
-parameter object and returns a results object. For a complete list of the functionality
-see the `examples` folder.
+The entry point to Trattoria is the PTUFile class. This class has methods that
+give us access to the algorithms. Each of the algorithms takes as input a
+parameter object and returns a results object. For a complete list of the
+functionality see the `examples` folder.
 
 ```python
 import trattoria
@@ -45,8 +46,8 @@ plt.ylabel("Intensity (Hz)")
 plt.show()
 ```
 
-The examples folders contains examples of all the functionality available in Trattoria.
-For more details check the docstrings in `core.py`.
+The examples folders contains examples of all the functionality available in
+Trattoria.  For more details check the docstrings in `core.py`.
 
 ## Design
 Trattoria is just a very thin wrapper around the
@@ -57,10 +58,17 @@ library. A Rust project that provides the compiled components that allows us to
 go fast.
 
 ## Changelog
+### 0.3.4
+- The g2 algorithm now supports a mode flag. With "symmetric" we use the
+  prefered version of the algorithm that returns negative and positive delays.
+  "asymmetric" returns only positive delays but is faster. Default is
+  "symmetric".
+
 ### 0.3.3
-- The underlying TTTR Toolbox and Trattoria Core were refactored to support multiple
-custom ranges or records at once. `start_range` and `stop_range` have disappeared in
-favor of `record_ranges`. It takes a list of tuples of integers or `None`.
+- The underlying TTTR Toolbox and Trattoria Core were refactored to support
+  multiple custom ranges or records at once. `start_range` and `stop_range`
+  have disappeared in favor of `record_ranges`. It takes a list of tuples of
+  integers or `None`.
 
 ## Citing
 
