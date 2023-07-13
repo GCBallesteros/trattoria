@@ -27,6 +27,8 @@ parameter object and returns a results object. For a complete list of the
 functionality see the `examples` folder.
 
 ```python
+from pathlib import Path
+
 import trattoria
 
 import matplotlib.pyplot as plt
@@ -58,6 +60,12 @@ library. A Rust project that provides the compiled components that allows us to
 go fast.
 
 ## Changelog
+### 0.3.5
+- Bug fix. The last 1024\*16 where being ignored for performance reasons. This has
+  has been fixed upstream in `tttr-toolbox` and this version of Trattoria uses the
+  upgraded version of `trattoria-core`.
+- `trattoria-core` dropped support for Python 3.6 and 3.7 and therefore Trattoria too.
+
 ### 0.3.4
 - The g2 algorithm now supports a mode flag. With "symmetric" we use the
   prefered version of the algorithm that returns negative and positive delays.
@@ -69,6 +77,7 @@ go fast.
   multiple custom ranges or records at once. `start_range` and `stop_range`
   have disappeared in favor of `record_ranges`. It takes a list of tuples of
   integers or `None`.
+
 
 ## Citing
 
